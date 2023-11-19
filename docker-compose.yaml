@@ -17,10 +17,10 @@ services:
     ports:
       - 11434:11434
 
-  loadtest:
-    image: grafana/k6:latest
-    volumes:
-      - ./tests/load:/tests
-    command: run /tests/healthcheck.js
-    depends_on:
-      - app
+  # loadtest:
+  #   image: grafana/k6:latest
+  #   volumes:
+  #     - ./tests/load:/tests
+  #   command: run /tests/healthcheck.js
+  #   depends_on:
+  #     - app

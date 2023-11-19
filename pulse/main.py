@@ -1,13 +1,36 @@
 import time
+import os
+from dotenv import load_dotenv
 
-from fastapi import FastAPI, Request
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from fastapi import FastAPI, Request, Form, HTTPException
+
+load_dotenv()
+
+SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 
 app = FastAPI()
-
+client = WebClient(token=SLACK_BOT_TOKEN)
 
 @app.get("/")
 async def read_resource():
     return {"status", "ok"}
+
+@app.post('/slack/test')
+async def test_command(response_url: str = Form(...), user_id: str = Form(...), channel_id: str = Form(...)):
+    try:
+        response = client.chat_postMessage(
+            channel=channel_id,
+            text="Hello from your app! :tada:"
+        )
+    except SlackApiError as e:
+        raise HTTPException(status_code=400, detail="Slack API Error")
+    
+    return {
+        "response_type": "in_channel",
+        "text": "Hello from your app! :tada:"
+    }
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):

@@ -10,22 +10,18 @@ from langchain import hub
 from langchain.chains import RetrievalQA
 
 
-def main():
+def chat():
 
     # Load data and create embeddings
     data = load_data()
 
     # Configure embedding & vectorstore
-    embedding = OllamaEmbeddings(model="zephyr")
+    embedding = OllamaEmbeddings(base_url="http://ollama:11434", model="zephyr")
     db = FAISS.from_documents(data, embedding)
 
     # Generates a RAG Chain
-    chain = load_chain("zephyr", db)
+    return load_chain("zephyr", db)
 
-    # Example query (replace with your actual use case)
-    query = "What is an Autonomous Agent?"
-    response = chain(query)
-    print(response)
 
 # Load your text file
 def load_data() -> str:
@@ -38,6 +34,7 @@ def load_data() -> str:
 # Load a locally downloaded AI model with Langchain
 def load_chain(model_name, vectorstore):
     llm = Ollama(
+        base_url="http://ollama:11434",
         model=model_name,
         verbose=True,
         callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),

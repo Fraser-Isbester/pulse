@@ -9,12 +9,14 @@ from fastapi import FastAPI, Request, Form, HTTPException
 load_dotenv()
 
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+from fastapi import FastAPI, Request
+from pulse import chat
 
 app = FastAPI()
 client = WebClient(token=SLACK_BOT_TOKEN)
 
 @app.get("/")
-async def read_resource():
+async def healthcheck():
     return {"status", "ok"}
 
 @app.post('/slack/test')
@@ -31,6 +33,12 @@ async def test_command(response_url: str = Form(...), user_id: str = Form(...), 
     #     "response_type": "in_channel",
     #     "text": "Hello from your app 2! :tada:"
     # }
+
+@app.get("/query")
+async def query(q: str = None):
+    if not q:
+        return {"error": "missing query"}
+    return chat()(q)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):

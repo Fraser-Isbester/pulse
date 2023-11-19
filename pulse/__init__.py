@@ -14,12 +14,8 @@ def main():
     # Load data and create embeddings
     data = load_data()
 
-
+    # Configure embedding via/ FAISS
     db = FAISS.from_documents(data, OpenAIEmbeddings())
-
-    # query = "What is an Autonomous Agent?"
-    # docs = db.similarity_search(query)
-    # print(docs)
 
     # Generates a RAG Chain
     chain = load_chain("zephyr", db)
@@ -36,20 +32,6 @@ def load_data() -> str:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=100)
     all_splits = text_splitter.split_documents(data)
     return all_splits
-
-
-# Create embeddings with FAISS
-def create_embeddings(data):
-    dimension = 768  # Example dimension, adjust as needed
-    num_vectors = len(data)  # Number of vectors is the number of lines in your file
-
-    # Creating a matrix with random data (replace this with your actual data embeddings)
-    db_vectors = np.random.random((num_vectors, dimension)).astype('float32')
-
-    # Building the index
-    index = faiss.IndexFlatL2(dimension)
-    index.add(db_vectors)
-    return index
 
 # Load a locally downloaded AI model with Langchain
 def load_chain(model_name, vectorstore):

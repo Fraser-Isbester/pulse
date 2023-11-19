@@ -1,7 +1,8 @@
 from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings import OllamaEmbeddings
+# from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.llms import Ollama
@@ -14,8 +15,9 @@ def main():
     # Load data and create embeddings
     data = load_data()
 
-    # Configure embedding via/ FAISS
-    db = FAISS.from_documents(data, OpenAIEmbeddings())
+    # Configure embedding & vectorstore
+    embedding = OllamaEmbeddings(model="zephyr")
+    db = FAISS.from_documents(data, embedding)
 
     # Generates a RAG Chain
     chain = load_chain("zephyr", db)

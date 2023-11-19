@@ -22,15 +22,15 @@ async def test_command(response_url: str = Form(...), user_id: str = Form(...), 
     try:
         response = client.chat_postMessage(
             channel=channel_id,
-            text="Hello from your app! :tada:"
+            text="Hello from your app 1! :tada:"
         )
     except SlackApiError as e:
         raise HTTPException(status_code=400, detail="Slack API Error")
     
-    return {
-        "response_type": "in_channel",
-        "text": "Hello from your app! :tada:"
-    }
+    # return {
+    #     "response_type": "in_channel",
+    #     "text": "Hello from your app 2! :tada:"
+    # }
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):

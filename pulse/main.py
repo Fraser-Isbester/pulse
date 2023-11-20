@@ -25,7 +25,7 @@ class SlackEventRequest(BaseModel):
     event: dict
     event_id: str
     event_time: int
-    
+
 processed_events = set()
 
 @app.get("/")
@@ -41,39 +41,39 @@ async def test_command(response_url: str = Form(...), user_id: str = Form(...), 
             text="Hello from your app 1! :tada:"
         )
         return {"status": "accepted"}
-    except SlackApiError as e:
+    except SlackApiError:
         raise HTTPException(status_code=400, detail="Slack API Error")
-        
+
 @app.post('/slack/ask')
 async def ask_command(event_request: SlackEventRequest):
     # Check if it's the challenge event
     if event_request.type == "url_verification" and event_request.challenge:
-        return {"challenge": event.challenge}
-    
+        return {"challenge": event_request.challenge}
+
     print("Received event: " + event_request.type + ", " + event_request.event_id)
-    
+
     # Idempotency to prevent processing duplicate events from retries
     # likely a nicer way to do this (something something redis? or debounce on time)
     event_id = event_request.event_id
     if event_id in processed_events:
         print("Not processing duplicate event: " + event_id)
         return {"status": "already processed"}
-    
+
     event = event_request.event
     event_type = event.get("type")
-    
+
     if event_type == "reaction_added":
         reaction = event.get("reaction")
-        
+
         if reaction == "eyes":
             item = event.get("item")
             channel_id = item.get("channel")
             message_ts = item.get("ts")
             processed_events.add(event_id)
-            
+
             try:
                 join_response = client.conversations_join(channel=channel_id)
-                
+
                 if join_response['ok']:
                     # fetch the content for query
                     response = client.conversations_history(
@@ -82,7 +82,7 @@ async def ask_command(event_request: SlackEventRequest):
                         limit=1,
                         inclusive=True
                     )
-                
+
                     message_content = response['messages'][0]['text'] if response['messages'] else None
                     if not message_content:
                         return {"error": "no message content"}
@@ -91,12 +91,12 @@ async def ask_command(event_request: SlackEventRequest):
                         channel=channel_id,
                         text=chat_response.get("result"),
                         thread_ts=message_ts
-                    )                    
+                    )
             except Exception as e:
                 print(e)
                 processed_events.remove(event_id)
                 raise HTTPException(status_code=400, detail="error")
-            
+
             return {"status": "accepted"}
 
     return {"status": "received"}

@@ -35,7 +35,6 @@ async def healthcheck():
 # Used with the /test slash command, can remove later
 @app.post('/slack/test')
 async def test_command(response_url: str = Form(...), user_id: str = Form(...), channel_id: str = Form(...)):
-    print(response_url)
     try:
         response = client.chat_postMessage(
             channel=channel_id,

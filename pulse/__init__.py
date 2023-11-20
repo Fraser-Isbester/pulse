@@ -1,10 +1,12 @@
 from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
+
 # from langchain.embeddings import OllamaEmbeddings
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
 # from langchain.llms import Ollama
 from langchain.chat_models import ChatOpenAI
 from langchain import hub
@@ -12,13 +14,12 @@ from langchain.chains import RetrievalQA
 
 
 def chat():
-
     # Load data and create embeddings
     data = load_data()
 
     # Configure embedding & vectorstore
     # embedding = OllamaEmbeddings(base_url="http://ollama:11434", model="zephyr")
-    
+
     # db = FAISS.from_documents(data, embedding)
     db = FAISS.from_documents(data, OpenAIEmbeddings())
 
@@ -33,6 +34,7 @@ def load_data() -> str:
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=100)
     all_splits = text_splitter.split_documents(data)
     return all_splits
+
 
 # Load a locally downloaded AI model with Langchain
 def load_chain(model_name, vectorstore):
@@ -52,7 +54,3 @@ def load_chain(model_name, vectorstore):
         chain_type_kwargs={"prompt": hub.pull("rlm/rag-prompt-llama")},
     )
     return qa_chain
-
-
-if __name__ == '__main__':
-    main()

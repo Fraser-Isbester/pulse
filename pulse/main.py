@@ -6,6 +6,10 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from pydantic import BaseModel
 from fastapi import FastAPI, Request, Form, HTTPException
+import logging
+import sys
+
+from pulse.routers import slack_v1
 
 from pulse import chat
 
@@ -13,18 +17,18 @@ load_dotenv()
 
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 
-app = FastAPI()
-client = WebClient(token=SLACK_BOT_TOKEN)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
+)
 
-# class SlackEventRequest(BaseModel):
-#     token: str
-#     challenge: str = None
-#     type: str
-#     team_id: str
-#     api_app_id: str
-#     event: dict
-#     event_id: str
-#     event_time: int
+# Create a logger instance for your application
+logger = logging.getLogger("pulse")
+
+app = FastAPI(debug=True)
+client = WebClient(token=SLACK_BOT_TOKEN)
 
 
 class SlackEventRequest(BaseModel):
@@ -41,11 +45,17 @@ async def healthcheck():
     return {"status", "ok"}
 
 
+# Imports Slack v1 routes
+app.include_router(slack_v1, prefix="/slack/v1", tags=["slack"])
+
+
 # Used with the /test slash command, can remove later
 @app.post("/slack/test")
 async def test_command(
     response_url: str = Form(...), user_id: str = Form(...), channel_id: str = Form(...)
 ):
+    print(response_url, user_id, channel_id)
+
     try:
         response = client.chat_postMessage(
             channel=channel_id, text="Hello from your app 1! :tada:"
@@ -110,13 +120,6 @@ async def ask_command(event_request: SlackEventRequest):
         raise HTTPException(status_code=400, detail="error")
 
     return {"status": "accepted"}
-
-
-@app.get("/query")
-async def query(q: str = None):
-    if not q:
-        return {"error": "missing query"}
-    return chat()(q)
 
 
 @app.middleware("http")

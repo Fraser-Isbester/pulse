@@ -9,19 +9,18 @@ services:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
-    depends_on:
-      - ollama
-
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - 11434:11434
-    volumes:
-      - ~/.ollama/models:/root/.ollama/models
-  # loadtest:
-  #   image: grafana/k6:latest
-  #   volumes:
-  #     - ./tests/load:/tests
-  #   command: run /tests/healthcheck.js
-  #   depends_on:
-  #     - app
+      # depends_on:
+      # - ollama
+      # ollama:
+      #   image: ollama/ollama:latest
+      #   ports:
+      #     - 11434:11434
+      #   volumes:
+      #     - ~/.ollama/models:/root/.ollama/models
+      # loadtest:
+      #   image: grafana/k6:latest
+      #   volumes:
+      #     - ./tests/load:/tests
+      #   command: run /tests/healthcheck.js
+      #   depends_on:
+      #     - app

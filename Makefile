@@ -1,4 +1,5 @@
-requirements.txt:
+
+requirements.txt: poetry.lock
 	poetry export -o requirements.txt --without-hashes
 
 .PHONY: clean-cache

@@ -26,13 +26,14 @@ async def event(request: Request):
     request = await request.json()
     logging.debug("Received /event dir: %s", request)
 
-
     # If a challenege event, return the challenge
     if request["type"] == EventWrapperTypes.URL_VERIFICATION.value:
         return {"challenge": request.challenge}
     # If not an event callback, return an error
     if typ := request["type"] != EventWrapperTypes.EVENT_CALLBACK.value:
-        raise HTTPException(status_code=400, detail=f"Unknown event wrapper type '{typ}'")
+        raise HTTPException(
+            status_code=400, detail=f"Unknown event wrapper type '{typ}'"
+        )
 
     # Turn the request into a pydantic model
     try:
@@ -55,17 +56,13 @@ async def event(request: Request):
 
     slack_event, item = request.event, request.event.item
     if slack_event.type == EventTypes.REACTION_ADDED.value:
-
         if slack_event.reaction == "sos":
-            history = slack.get_message_from_event(
-                slack.client,
-                slack_event
-            )
+            history = slack.get_message_from_event(slack.client, slack_event)
             chat_response = get_retriever()(history)
             slack.post_message(
                 slack.client,
                 channel=slack_event.item.channel,
-                text=chat_response["result"]
+                text=chat_response["result"],
             )
 
             # logger.debug("sos reaction recieved, processing response...")

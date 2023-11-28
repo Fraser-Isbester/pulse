@@ -13,12 +13,15 @@ logger = logging.getLogger("pulse.loaders.slack")
 
 client = WebClient(token=config.slack_token)
 
+
 class EventWrapperTypes(Enum):
     URL_VERIFICATION = "url_verification"
     EVENT_CALLBACK = "event_callback"
 
+
 class EventTypes(Enum):
     """Actual Slack Event Types."""
+
     MESSAGE = "message"
     REACTION_ADDED = "reaction_added"
     APP_MENTION = "app_mention"
@@ -33,6 +36,7 @@ class SlackEventItemType(BaseModel):
 
 class SlackEventType(BaseModel):
     """Slack Event."""
+
     model_config = ConfigDict(extra="allow")
 
     type: str
@@ -41,10 +45,12 @@ class SlackEventType(BaseModel):
 
 class SlackEventCallbackType(BaseModel):
     """Slack Event Request Wrapper."""
+
     model_config = ConfigDict(extra="allow")
 
     type: str
     event: SlackEventType
+
 
 def get_message_from_event(client, event: SlackEventType):
     """Given a SlackEvent on a message, return that message text."""
@@ -52,10 +58,7 @@ def get_message_from_event(client, event: SlackEventType):
     client.conversations_join(channel=event.item.channel)
 
     history = client.conversations_history(
-        channel=event.item.channel,
-        latest=event.item.ts,
-        limit=1,
-        inclusive=True
+        channel=event.item.channel, latest=event.item.ts, limit=1, inclusive=True
     )
 
     content = history["messages"][0]["text"] if history.get("messages") else None

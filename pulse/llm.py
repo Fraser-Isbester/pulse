@@ -1,4 +1,3 @@
-
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
@@ -9,7 +8,10 @@ from langchain.chains import RetrievalQA
 
 from pulse.vectorstore import redis
 
-def get_retriever(model_name: str="gpt-4-1106-preview", vectorstore=redis) -> RetrievalQA:
+
+def get_retriever(
+    model_name: str = "gpt-4-1106-preview", vectorstore=redis
+) -> RetrievalQA:
     """Builds the RAG Chain."""
 
     llm = ChatOpenAI(

@@ -1,6 +1,6 @@
 
 requirements.txt: poetry.lock
-	poetry export -o requirements.txt --without-hashes
+	poetry export -o requirements.txt
 
 .PHONY: clean-cache
 clean-cache:  ## Deletes every __pycache__ folder in the project

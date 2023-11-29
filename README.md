@@ -1,5 +1,9 @@
 # Pulse
-Basic RAG model.
+Basic RAG Chat completion bot for Slack.
+
+# Features
+- Incoming slack message vectorizer
+- slack message responded (:eyes: to trigger a response)
 
 # Local Development
 - run: `docker compose up --build`

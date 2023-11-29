@@ -14,7 +14,7 @@ from pulse.services.slack import (
 import pulse.services.slack as slack
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("pulse.routers.slack")
 
 v1 = APIRouter()
 
@@ -28,7 +28,8 @@ async def event(request: Request):
 
     # If a challenege event, return the challenge
     if request["type"] == EventWrapperTypes.URL_VERIFICATION.value:
-        return {"challenge": request.challenge}
+        return {"challenge": request["challenge"]}
+
     # If not an event callback, return an error
     if typ := request["type"] != EventWrapperTypes.EVENT_CALLBACK.value:
         raise HTTPException(
@@ -43,50 +44,23 @@ async def event(request: Request):
         raise HTTPException(status_code=400, detail="Error validating request")
     logger.debug("Validated request: %s", request)
 
+    ## Event Processing Below ##
+
     # TODO: push this to a processing queue
     await slack_event_loader(request.event)
 
-    # Respond to an SOSd message
-    # TODO: Move this to a processing queue
-    # TODO: Migrate this into a service call abstraction
-
-    # if slack_event.type == EventTypes.REACTION_ADDED.value:
-    #     if slack_event.reaction == "eyes":
-    #         await slack_query_responder(request)
-
-    slack_event, item = request.event, request.event.item
-    if slack_event.type == EventTypes.REACTION_ADDED.value:
-        if slack_event.reaction == "sos":
-            history = slack.get_message_from_event(slack.client, slack_event)
-            chat_response = get_retriever()(history)
+    chat_completion_retriever = get_retriever()
+    match request.event:
+        # TODO: push this to a processing queue
+        case event if event.type == EventTypes.REACTION_ADDED.value and event.reaction == "sos":
+            logger.debug("Received actionable event: %s", event)
+            history = slack.get_message_from_event(slack.client, event)
+            chat_response = chat_completion_retriever(history)
             slack.post_message(
                 slack.client,
-                channel=slack_event.item.channel,
+                channel=event.item.channel,
                 text=chat_response["result"],
             )
 
-            # logger.debug("sos reaction recieved, processing response...")
-            # join = client.conversations_join(channel=item.channel)
-
-            # if not join["ok"]:
-            #     raise HTTPException(status_code=400, detail=f"Slack API Error: {join}")
-
-            # history = client.conversations_history(
-            #     channel=item.channel, latest=item.ts, limit=1, inclusive=True
-            # )
-
-            # content = history["messages"][0]["text"] if history.get("messages") else None
-
-            # if not content:
-            #     raise HTTPException(status_code=400, detail="No message content")
-
-            # retriever = get_retriever()
-            # chat_response = retriever(content)
-
-            # client.chat_postMessage(
-            #     channel=item.channel,
-            #     text=chat_response["result"],
-            #     thread_ts=item.ts,
-            # )
 
     return {"status": "accepted"}

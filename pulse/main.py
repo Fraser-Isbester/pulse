@@ -1,23 +1,28 @@
-import time
+"""Application server logic for Pulse."""
 
+import time
 from fastapi import FastAPI, Request
 
 from pulse.routers import slack_v1
 
-app = FastAPI(debug=True)
+app = FastAPI()
 
-# Routes
+# Slack Routes
 app.include_router(slack_v1, prefix="/slack/v1", tags=["slack"])
 
 
 ## HealthChecks & MiddleWare ##
-@app.get("/")
+@app.get("/healthcheck")
 async def healthcheck():
+    """server Healthcheck endpoint."""
+
     return {"status", "ok"}
 
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
+    """Adds timing info to all HTTP responses."""
+
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time

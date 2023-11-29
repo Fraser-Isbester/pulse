@@ -11,23 +11,7 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
-      # - ollama
   redis:
     image: redis/redis-stack:latest
     ports:
       - "6379:6379"
-  worker:
-    build: .
-    command: rq worker --url redis://redis:6379
-    depends_on:
-      - redis
-    links:
-      - redis
-    deploy:
-      replicas: 1
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   ports:
-  #     - 11434:11434
-  #   volumes:
-  #     - ~/.ollama/models:/root/.ollama/models

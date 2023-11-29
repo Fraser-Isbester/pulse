@@ -1,11 +1,13 @@
 """Contains Slack Client & Types."""
-from enum import Enum
-from pydantic import BaseModel, ConfigDict
-from typing import Optional
-from slack_sdk import WebClient
-from pulse import config
 import logging
 import sys
+from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
+from slack_sdk import WebClient
+
+from pulse import config
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.loaders.slack")

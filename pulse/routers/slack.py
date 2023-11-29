@@ -5,11 +5,10 @@ import sys
 
 from fastapi import APIRouter, HTTPException, Request
 
-import pulse.services.slack as slack
 from pulse.llm import get_retriever
 from pulse.loaders import slack_event_loader
-from pulse.services.slack import (EventTypes, EventWrapperTypes,
-                                  SlackEventCallbackType)
+from pulse.services import slack
+from pulse.services.slack import EventTypes, EventWrapperTypes, SlackEventCallbackType
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.routers.slack")

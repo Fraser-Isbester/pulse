@@ -21,9 +21,7 @@ def test_reaction_added():
 
 
 def test_app_mention():
-    response = client.post(
-        "/event", json={"type": "app_mention", "event": {"type": "app_mention"}}
-    )
+    response = client.post("/event", json={"type": "app_mention", "event": {"type": "app_mention"}})
     assert response.status_code == 200
     # Add assertions for your logic
 

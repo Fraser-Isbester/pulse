@@ -32,9 +32,7 @@ async def event(request: Request):
 
     # If not an event callback, return an error
     if typ := request["type"] != EventWrapperTypes.EVENT_CALLBACK.value:
-        raise HTTPException(
-            status_code=400, detail=f"Unknown event wrapper type '{typ}'"
-        )
+        raise HTTPException(status_code=400, detail=f"Unknown event wrapper type '{typ}'")
 
     # Turn the request into a pydantic model
     try:
@@ -61,6 +59,5 @@ async def event(request: Request):
                 channel=event.item.channel,
                 text=chat_response["result"],
             )
-
 
     return {"status": "accepted"}

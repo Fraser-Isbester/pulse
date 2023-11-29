@@ -59,9 +59,7 @@ def get_message_from_event(client, event: SlackEventType):
 
     client.conversations_join(channel=event.item.channel)
 
-    history = client.conversations_history(
-        channel=event.item.channel, latest=event.item.ts, limit=1, inclusive=True
-    )
+    history = client.conversations_history(channel=event.item.channel, latest=event.item.ts, limit=1, inclusive=True)
 
     content = history["messages"][0]["text"] if history.get("messages") else None
     return content

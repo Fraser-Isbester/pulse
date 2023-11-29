@@ -42,21 +42,20 @@ async def event(request: Request):
 
     ## Event Processing Below ##
 
-    # TODO: push this to a processing queue
+    # TODO(fraser-isbester): push this to a processing queue
+    # https://github.com/Fraser-Isbester/pulse/issues/4
     await slack_event_loader(request.event)
 
     chat_completion_retriever = get_retriever()
     match request.event:
-        # TODO: push this to a processing queue
+        # TODO(fraser-isbester): push this to a processing queue
+        # https://github.com/Fraser-Isbester/pulse/issues/4
         case event if event.type == EventTypes.REACTION_ADDED.value and event.reaction == "eyes":
             logger.debug("Received actionable event: %s", event)
             history = slack.get_message_from_event(slack.client, event)
             chat_response = chat_completion_retriever(history)
             slack.post_message(
-                slack.client,
-                channel=event.item.channel,
-                text=chat_response["result"],
-                thread_ts=event.item.ts
+                slack.client, channel=event.item.channel, text=chat_response["result"], thread_ts=event.item.ts
             )
 
     return {"status": "accepted"}

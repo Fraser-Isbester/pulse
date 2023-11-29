@@ -50,7 +50,7 @@ async def event(request: Request):
     chat_completion_retriever = get_retriever()
     match request.event:
         # TODO: push this to a processing queue
-        case event if event.type == EventTypes.REACTION_ADDED.value and event.reaction == "sos":
+        case event if event.type == EventTypes.REACTION_ADDED.value and event.reaction == "eyes":
             logger.debug("Received actionable event: %s", event)
             history = slack.get_message_from_event(slack.client, event)
             chat_response = chat_completion_retriever(history)
@@ -58,6 +58,7 @@ async def event(request: Request):
                 slack.client,
                 channel=event.item.channel,
                 text=chat_response["result"],
+                thread_ts=event.item.ts
             )
 
     return {"status": "accepted"}

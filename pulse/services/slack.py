@@ -65,8 +65,8 @@ def get_message_from_event(client, event: SlackEventType):
     return content
 
 
-def post_message(client, channel: str, text: str):
+def post_message(client, channel: str, text: str, thread_ts: Optional[str] = None):
     """Posts a message to a Slack channel."""
 
     logging.debug("Posting message to channel %s: %s", channel, text)
-    client.chat_postMessage(channel=channel, text=text)
+    client.chat_postMessage(channel=channel, text=text, thread_ts=thread_ts)

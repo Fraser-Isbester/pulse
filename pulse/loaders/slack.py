@@ -1,7 +1,8 @@
 """Contains slack loaders used for loading data from slack into the vectorstore."""
-from pulse.vectorstore import redis
 import logging
 import sys
+
+from pulse.vectorstore import redis
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.loaders.slack")

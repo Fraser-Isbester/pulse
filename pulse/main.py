@@ -1,6 +1,7 @@
 """Application server logic for Pulse."""
 
 import time
+
 from fastapi import FastAPI, Request
 
 from pulse.routers import slack_v1

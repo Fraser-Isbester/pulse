@@ -1,10 +1,8 @@
+from langchain import hub
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-
-# from langchain.llms import Ollama
-from langchain.chat_models import ChatOpenAI
-from langchain import hub
 from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
 
 from pulse.vectorstore import redis
 

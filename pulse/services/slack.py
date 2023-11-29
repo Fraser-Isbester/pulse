@@ -4,10 +4,9 @@ import sys
 from enum import Enum
 from typing import Optional
 
+from pulse import config
 from pydantic import BaseModel, ConfigDict
 from slack_sdk import WebClient
-
-from pulse import config
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.loaders.slack")
@@ -59,9 +58,7 @@ def get_message_from_event(client, event: SlackEventType):
 
     client.conversations_join(channel=event.item.channel)
 
-    history = client.conversations_history(
-        channel=event.item.channel, latest=event.item.ts, limit=1, inclusive=True
-    )
+    history = client.conversations_history(channel=event.item.channel, latest=event.item.ts, limit=1, inclusive=True)
 
     content = history["messages"][0]["text"] if history.get("messages") else None
     return content

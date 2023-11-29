@@ -6,17 +6,13 @@ client = TestClient(app)
 
 
 def test_url_verification():
-    response = client.post(
-        "/event", json={"type": "url_verification", "challenge": "testchallenge123"}
-    )
+    response = client.post("/event", json={"type": "url_verification", "challenge": "testchallenge123"})
     assert response.status_code == 200
     assert response.json() == {"challenge": "testchallenge123"}
 
 
 def test_reaction_added():
-    response = client.post(
-        "/event", json={"type": "reaction_added", "event": {"type": "reaction_added"}}
-    )
+    response = client.post("/event", json={"type": "reaction_added", "event": {"type": "reaction_added"}})
     assert response.status_code == 200
     # Add assertions for your logic
 

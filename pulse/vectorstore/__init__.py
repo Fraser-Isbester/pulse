@@ -11,9 +11,10 @@ from pulse import config
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.vectorstore")
 
-def get_vectorstore() -> VectorStore:
-    if config.vectorstore == "redis":
 
+def get_vectorstore() -> VectorStore:
+
+    if config.vectorstore == "redis":
         redis = Redis(
             redis_url=config.redis_url + "/1",
             index_name="slack-messages",
@@ -21,3 +22,6 @@ def get_vectorstore() -> VectorStore:
         )
         logger.debug("created redis vectorstore index: %s", redis.index_name)
         return redis
+
+
+vectorstore = get_vectorstore()

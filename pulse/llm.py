@@ -4,10 +4,10 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
-from pulse.vectorstore import redis
+from pulse.vectorstore import vectorstore
 
 
-def get_retriever(model_name: str = "gpt-4-1106-preview", vectorstore=redis) -> RetrievalQA:
+def get_retriever(model_name: str = "gpt-4-1106-preview", vectorstore=vectorstore) -> RetrievalQA:
     """Builds the RAG Chain."""
 
     llm = ChatOpenAI(

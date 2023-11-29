@@ -2,7 +2,7 @@
 import logging
 import sys
 
-from pulse.vectorstore import redis
+from pulse.vectorstore import vectorstore
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.loaders.slack")
@@ -25,6 +25,6 @@ async def event_loader(event):
 
     logger.debug("Adding message to vectorstore: %s, {%s}", text, meta)
 
-    id = await redis.aadd_texts(texts=[text], metadata=meta)
+    id = await vectorstore.aadd_texts(texts=[text], metadata=meta)
     logging.debug("Added message to vectorstore: %s", id)
     return id

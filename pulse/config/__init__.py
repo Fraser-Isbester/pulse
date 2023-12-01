@@ -13,3 +13,5 @@ postgres_url = environ.get("POSTGRES_URL", "postgresql+pg8000://postgres@postgre
 
 slack_token = environ.get("SLACK_BOT_TOKEN", None)
 openai_api_key = environ.get("OPENAI_API_KEY", None)
+confluence_username = environ.get("CONFLUENCE_USERNAME", None)
+confluence_api_key = environ.get("CONFLUENCE_API_KEY", None)

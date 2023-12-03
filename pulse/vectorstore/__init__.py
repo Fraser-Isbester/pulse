@@ -20,7 +20,7 @@ def get_vectorstore(config, vectorstore: VectorStoreTypes = VectorStoreTypes.RED
 
     # TODO(fraser-isbester): make these configurable
     # https://github.com/Fraser-Isbester/pulse/issues/3
-    index_name = "slack-messages"
+    index_name = "pulse"
     embedding = OpenAIEmbeddings(api_key=config.openai_api_key)
 
     match vectorstore:
@@ -28,17 +28,17 @@ def get_vectorstore(config, vectorstore: VectorStoreTypes = VectorStoreTypes.RED
             # Note: Lazy import for mutually exclusive dependencies
             from langchain.vectorstores.redis import Redis
             return Redis(
-                redis_url=config.redis_url + "/1",
+                redis_url=config.redis_url + "/1", # NOTE: Redis DB 1 (0 reserved for rq)
                 index_name=index_name,
                 embedding=embedding,
             )
         case VectorStoreTypes.PGVECTOR:
             # Note: Lazy import for mutually exclusive dependencies
-            from langchain.vectorstores.redis import PGVector
+            from langchain.vectorstores.pgvector import PGVector
             return PGVector(
-                postgres_url=config.postgres_url,
-                index_name=index_name,
-                embedding=embedding,
+                connection_string=config.postgres_url,
+                collection_name=index_name,
+                embedding_function=embedding,
             )
 
     raise ValueError(f"unknown vectorstore: {vectorstore}")
@@ -46,4 +46,4 @@ def get_vectorstore(config, vectorstore: VectorStoreTypes = VectorStoreTypes.RED
 
 # TODO(fraser-isbester): Parameterize call
 # https://github.com/Fraser-Isbester/pulse/issues/3
-vectorstore = get_vectorstore(config, vectorstore=VectorStoreTypes.REDIS)
+vectorstore = get_vectorstore(config, vectorstore=VectorStoreTypes.PGVECTOR)

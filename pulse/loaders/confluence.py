@@ -43,7 +43,3 @@ def doc_loader(doc):
 def _strip_html_tags(text):
     """Remove html tags from a string"""
     return etree.HTML(text).xpath("string()")
-
-# # for testing
-# if __name__ == "__main__":
-#     get_all_labelled_docs()

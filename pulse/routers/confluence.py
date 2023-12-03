@@ -16,4 +16,4 @@ v1 = APIRouter()
 @v1.post("/ingest")
 async def ingest():
     """Trigger to ingest all labelled pages from confluence"""
-    confluence_ingestor.load_all_labelled_docs()
+    confluence_ingestor()

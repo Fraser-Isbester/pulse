@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-
 from pulse.main import app  # Import your FastAPI app
 
 client = TestClient(app)

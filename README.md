@@ -1,9 +1,27 @@
 # Pulse
-Basic RAG Chat completion bot for Slack.
+Slack chat interface for Retrievement Augmented Generation (RAG) of knowledge bases.
 
 # Features
 - Incoming slack message vectorizer
 - slack message responded (:eyes: to trigger a response)
+
+## Inference/Embedding Support
+- [x] OpenAI
+- [ ] Ollama
+
+## Vector store Support
+- [x] Redis
+- [x] Postgres
+- [ ] Weviate
+
+## Deployment Methods
+ - [x] Docker
+ - [ ] Kubernetes (Helm)
+
+## Source Loaders
+- [x] slack (push)
+- [ ] slack (pull)
+- [ ] confluence (pull)
 
 # Local Development
 - run: `docker compose up --build`

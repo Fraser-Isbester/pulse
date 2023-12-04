@@ -22,4 +22,4 @@ jobs:
           pip install --upgrade pip
           pip install ruff==0.1.6
       - name: Lint Python
-        run: ruff check ./pulse --output-format github
+        run: ruff . --output-format github

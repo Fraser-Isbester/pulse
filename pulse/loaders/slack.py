@@ -2,10 +2,11 @@
 import logging
 import sys
 
+from pulse import config
 from pulse.vectorstore import vectorstore
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger("pulse.loaders.slack")
+logging.basicConfig(level=config.log_level, stream=sys.stdout)
+logger = logging.getLogger(__name__)
 
 
 async def event_loader(event):

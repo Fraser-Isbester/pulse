@@ -7,8 +7,8 @@ from langchain.schema.vectorstore import VectorStore
 
 from pulse import config
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger("pulse.vectorstore")
+logging.basicConfig(level=config.log_level, stream=sys.stdout)
+logger = logging.getLogger(__name__)
 
 class VectorStoreTypes(Enum):
     """Supported VectorStores"""

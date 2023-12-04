@@ -8,8 +8,8 @@ from pulse import config
 from pydantic import BaseModel, ConfigDict
 from slack_sdk import WebClient
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger("pulse.loaders.slack")
+logging.basicConfig(level=config.log_level, stream=sys.stdout)
+logger = logging.getLogger(__name__)
 
 
 client = WebClient(token=config.slack_token)

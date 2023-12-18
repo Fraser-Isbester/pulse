@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
   push:
 
+env:
+  python-version: "3.11"
+
 jobs:
+
   lint:
     runs-on: ubuntu-latest
     permissions:
@@ -12,14 +16,27 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.11
+      - name: Set up Python ${{ env.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "${{ env.python-version }}"
           cache: pip
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
-          pip install ruff==0.1.6
+          pip install ruff==0.1.8
       - name: Lint Python
         run: ruff . --output-format github
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ env.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "${{ env.python-version }}"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Test Python
+        run:  python -m pytest tests/unit

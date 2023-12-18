@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.services.confluence")
 
 client = Confluence(
-    url="https://rose-garden.atlassian.net",
+    url=config.confluence_url,
     username=config.confluence_username,
     password=config.confluence_api_key,
     cloud=True,

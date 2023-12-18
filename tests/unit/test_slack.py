@@ -16,7 +16,7 @@ url_verification_payload = {
 
 @pytest.mark.asyncio
 async def test_url_verification_event():
-    # Mocking the Request object to return the URL verification payload
+    """Test the URL verification event handler"""
     with patch("pulse.routers.slack.Request") as mock_request:
         mock_request.json = AsyncMock(return_value=url_verification_payload)
         response = await event(mock_request)

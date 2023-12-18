@@ -20,6 +20,6 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
-          pip install ruff==0.1.6
+          pip install ruff==0.1.8
       - name: Lint Python
         run: ruff . --output-format github

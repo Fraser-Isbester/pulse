@@ -2,14 +2,16 @@
 import logging
 import sys
 
+from langchain.schema.vectorstore import VectorStore
+
 from pulse import config
-from pulse.vectorstore import vectorstore
+from pulse.services.slack import SlackEventType
 
 logging.basicConfig(level=config.log_level, stream=sys.stdout)
 logger = logging.getLogger(__name__)
 
 
-async def event_loader(event):
+async def event_loader(event: SlackEventType, vectorstore: VectorStore):
     """
     Load slack events into the vectorstore.
     """

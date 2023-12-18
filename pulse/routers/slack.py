@@ -3,10 +3,10 @@
 import logging
 import sys
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
+from langchain.schema.vectorstore import VectorStore
 
-from pulse import config
-from pulse.llm import get_retriever
+from pulse import config, llm, vectorstore
 from pulse.loaders import slack_event_loader
 from pulse.services import slack
 from pulse.services.slack import EventTypes, EventWrapperTypes, SlackEventCallbackType
@@ -16,9 +16,8 @@ logger = logging.getLogger(__name__)
 
 v1 = APIRouter()
 
-
 @v1.post("/event")
-async def event(request: Request):
+async def event(request: Request, vectorstore: VectorStore = Depends(vectorstore.get_vectorstore)):
     """Responds to a Slack event."""
 
     request = await request.json()
@@ -44,9 +43,9 @@ async def event(request: Request):
 
     # TODO(fraser-isbester): push this to a processing queue
     # https://github.com/Fraser-Isbester/pulse/issues/4
-    await slack_event_loader(request.event)
+    await slack_event_loader(request.event, vectorstore)
 
-    chat_completion_retriever = get_retriever()
+    chat_completion_retriever = llm.get_retriever(vectorstore)
     match request.event:
         # TODO(fraser-isbester): push this to a processing queue
         # https://github.com/Fraser-Isbester/pulse/issues/4

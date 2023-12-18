@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends
 from langchain.schema.vectorstore import VectorStore
 
 from pulse.loaders import confluence_ingestor
-from pulse import config, llm, vectorstore
+from pulse import vectorstore
 
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)

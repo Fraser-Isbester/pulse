@@ -3,10 +3,12 @@
 import logging
 import sys
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from langchain.schema.vectorstore import VectorStore
 
-from pulse.llm import get_retriever
 from pulse.loaders import confluence_ingestor
+from pulse import config, llm, vectorstore
+
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.routers.slack")
@@ -14,6 +16,6 @@ logger = logging.getLogger("pulse.routers.slack")
 v1 = APIRouter()
 
 @v1.post("/ingest")
-async def ingest():
+async def ingest(vectorstore: VectorStore = Depends(vectorstore.get_vectorstore)):
     """Trigger to ingest all labelled pages from confluence"""
-    confluence_ingestor()
+    confluence_ingestor(vectorstore)

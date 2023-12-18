@@ -2,15 +2,14 @@
 import logging
 import sys
 
-from atlassian import Confluence
+from langchain.schema.vectorstore import VectorStore
 from lxml import etree
 from pulse.services import confluence
-from pulse.vectorstore import vectorstore
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 logger = logging.getLogger("pulse.loaders.confluence")
 
-def load_all_labelled_docs():
+def load_all_labelled_docs(vectorstore: VectorStore):
     """
     Load all documents from a confluence space with "pulse" label into the vector store
     """
@@ -23,7 +22,7 @@ def load_all_labelled_docs():
         
     return docs
 
-def doc_loader(doc):
+def doc_loader(doc, vectorstore: VectorStore):
     """
     Load confluence documents into the vectorstore.
     """

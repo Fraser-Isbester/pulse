@@ -15,7 +15,7 @@ clean-cache:  ## Deletes every __pycache__ folder in the project
 
 .PHONY: test
 test:
-	@python -m pytest tests/unit
+	@poetry run python -m pytest tests/unit
 
 .PHONY: lint
 lint:  ## Lints ./pulse fixes everthing it can safely in the processes

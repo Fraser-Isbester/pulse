@@ -4,7 +4,7 @@ import sys
 
 from langchain.schema.vectorstore import VectorStore
 from lxml import etree
-from pulse.services import confluence
+from pulse.services.confluence import confluencefactory
 from pulse import config
 
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
@@ -15,7 +15,7 @@ def load_all_labelled_docs(vectorstore: VectorStore):
     Load all documents from a confluence space with "pulse" label into the vector store
     """
     # rest call to confluence with the username and api key
-    docs = confluence.client.get_all_pages_from_space(config.confluence_space, expand="body.view,version")
+    docs = confluencefactory.client.get_all_pages_from_space(config.confluence_space, expand="body.view,version")
     for doc in docs:
         doc_loader(doc, vectorstore)
         

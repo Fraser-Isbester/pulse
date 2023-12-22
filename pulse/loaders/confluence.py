@@ -19,9 +19,8 @@ def load_all_labelled_docs(vectorstore: VectorStore):
     for doc in docs:
         doc_loader(doc, vectorstore)
         
-    return docs
-
-def doc_loader(doc, vectorstore: VectorStore):
+        
+def doc_loader(doc: dict, vectorstore: VectorStore):
     """
     Load confluence documents into the vectorstore.
     """
@@ -33,11 +32,9 @@ def doc_loader(doc, vectorstore: VectorStore):
     
     logger.debug("Adding document to vectorstore: %s, {%s}", text, meta)
     
-    id = vectorstore.aadd_texts(texts=[text], metadata=meta)
+    vectorstore.aadd_texts(texts=[text], metadata=meta)
     logging.debug("Added document to vectorstore: %s", id)
-    return id
-
     
-def _strip_html_tags(text):
+def _strip_html_tags(text: str) -> etree._ElementUnicodeResult:
     """Remove html tags from a string"""
     return etree.HTML(text).xpath("string()")

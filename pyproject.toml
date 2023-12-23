@@ -21,6 +21,8 @@ langchainhub = "^0.1.14"
 sqlalchemy = "^2.0.23"
 pg8000 = "^1.30.3"
 pgvector = "^0.2.4"
+atlassian-python-api = "^3.41.4"
+lxml = "^4.9.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

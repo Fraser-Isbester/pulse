@@ -4,12 +4,16 @@ import time
 
 from fastapi import FastAPI, Request
 
-from pulse.routers import slack_v1
+from pulse.routers import slack_v1, confluence_v1
 
 app = FastAPI()
 
 # Slack Routes
 app.include_router(slack_v1, prefix="/slack/v1", tags=["slack"])
+
+# Confluence Routes
+app.include_router(confluence_v1, prefix="/confluence/v1", tags=["confluence"])
+
 
 ## HealthChecks & MiddleWare ##
 @app.get("/healthcheck")
